@@ -20,6 +20,7 @@ $RECYCLE.BIN/
 #matlab
 *.mat
 *.asv
+*.fig
 
 # =========================
 # Operating System Files
