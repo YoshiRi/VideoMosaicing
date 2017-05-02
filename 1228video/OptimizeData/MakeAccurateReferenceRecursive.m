@@ -49,12 +49,15 @@ ylabel('rotational ref [deg]');
 grid on;
 legend('with Distance Matrix Information','with Neighbor Information','Reculsive Methods','Location','Best')
 
-figure(4);
+hfig=figure(4);
 plot(time,T_val(:,4),'b',time,nT_val(:,4),'r--');
 xlabel('time [s]');
 ylabel('rotational ref [deg]');
 grid on;
 legend('with Map Information','with Neighbor Information','Location','Best')
+pfig = pubfig(hfig);
+expfig('results\thetaCompared','-pdf');
+
 
 sT_val(2:n,4) = solve_Mapping(rCtaMap,Spmat);
 figure(5);
@@ -103,12 +106,15 @@ ylabel('Scaling ');
 grid on;
 legend('Estimated Reference with FullMap')
 
-figure(8);
+hfig=figure(8);
 plot(time,T_val(:,3),'b',time,nT_val(:,3),'r--',time,rT_val(:,3),'g-.');
 xlabel('time [s]');
 ylabel('Scaling ');
 grid on;
 legend('with Map Information','with Neighbor Information','with Recursive Method','Location','Best')
+pfig = pubfig(hfig);
+expfig('results\scalingCompared','-pdf');
+
 
 
 figure(9);

@@ -26,6 +26,7 @@ save('results\comparison','evaled','evaled_n')
 
 
 %% plot and showing
+load('results\comparison');
 fr = ndgrid(1:length);
 
 hfig=figure(1);
@@ -33,22 +34,26 @@ plot(fr,evaled(:,1),'b',fr,evaled_n(:,1),'r--',[1 351],[0 0],'c-');
 grid on;
 xlabel('frame number');
 ylabel('error')
-legend('with Full Infromation','with Neighbor Information','Ideal','Location','best')
+legend('with Full Relationship','with Neighbor Relationship','Ideal','Location','best')
 title('Root Mean Squared Difference for Tracked Image')
 pfig = pubfig(hfig);
 pfig.LegendLoc = 'best';
+pfig.FigDim = [15 11];
 expfig('results\ssdcompare','-pdf');
+
 
 hfig=figure(2);
 plot(fr,evaled(:,2),'b',fr,evaled_n(:,2),'r--',[1 351],[1 1],'c-');
 grid on;
 xlabel('frame number');
 ylabel('evaluated value')
-legend('with Full Infromation','with Neighbor Information','Ideal','Location','best')
+legend('with Full Relationship','with Neighbor Relationship','Ideal','Location','best')
 title('Mutual Infromation for Tracked Image')
 pfig = pubfig(hfig);
 pfig.LegendLoc = 'best';
+pfig.FigDim = [15 11];
 expfig('results\micompare','-pdf');
+
 
 figure(3);
 imshow(refMap(183:662,1:618),[0 255])
