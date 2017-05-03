@@ -4,22 +4,20 @@ clear all
 close all
 %% read data
 addpath('..\');
-filename = '1228'
+filename = '626EXP'
 vidObj = VideoReader(strcat(filename,'.wmv'));
 vidHeight = vidObj.Height;
 vidWidth = vidObj.Width;
-s = struct('cdata',zeros(vidHeight,vidWidth,3,'uint8'),...
-    'colormap',[]);
 k=1;
 
    GT = rgb2gray( readFrame(vidObj));
     imshow(GT)
 
 %%    
-addpath('..\OptimizeData\')
-addpath('..\ExtractData\')
+addpath('..\Optimization\')
+addpath('..\Extraction\')
 load('VideoImages.mat');
-load('Optimized_1228.mat');
+load('Optimized_626.mat');
 
 
 length = size(nT_val,1); % 行列と配列の長さ
@@ -49,8 +47,24 @@ refMapn = Map;
 
 %% Make GrandTruth
 %ここには慎重な計算が必要
+% A:
+crop = FindMinMax( T_val(1,:) ,width,height,xmin,ymin);
+Abase = [crop(2),crop(1)]; % (Ay,Ax)
+Bbase = [vidHeight-height,vidWidth-width]/2;
+AminA = [1 1]; AmaxA = size(Map);
+BminB = [1 1]; BmaxB = [vidHeight,vidWidth];
+AminB = AminA+Bbase-Abase;AmaxB = AmaxA+Bbase-Abase;
+BminA = BminB+Abase-Bbase;BmaxA = BmaxB+Abase-Bbase;
+%min同士はmaxをとる vise versa
+Amin = max(AminA,BminA);
+Bmin = max(AminB,BminB);
+Amax = min(AmaxA,BmaxA);
+Bmax = min(AmaxB,BmaxB);
 
-refMapn(183:662,1:618) = double(GT(1:480,247:864)); 
+refMapn(Amin(1):Amax(1),Amin(2):Amax(2))=double(GT(Bmin(1):Bmax(1),Bmin(2):Bmax(2)));
+refMapn_c = refMapn(Amin(1):Amax(1),Amin(2):Amax(2)); %cropped one
+save('results\refMapn','refMapn','refMapn_c');
+
 
 %% Make 
 bwid = size(Map,2);

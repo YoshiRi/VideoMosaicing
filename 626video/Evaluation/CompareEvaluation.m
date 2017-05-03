@@ -15,11 +15,12 @@ end
 
 %% reload data
 load('results\MosaicingNeighbor.mat');
+load('results\refMapn');
 
 evaled_n = zeros(length,2);
 for k=1:length
-    evaled_n(k,1)=EvalImg(Updaten(k).i,refMap,'SSD');
-    evaled_n(k,2)=EvalImg(Updaten(k).i,refMap,'MI');
+    evaled_n(k,1)=EvalImg(Updaten(k).i,refMapn,'SSD');
+    evaled_n(k,2)=EvalImg(Updaten(k).i,refMapn,'MI');
 end
 
 save('results\comparison','evaled','evaled_n')
@@ -27,14 +28,19 @@ save('results\comparison','evaled','evaled_n')
 
 %% plot and showing
 load('results\comparison');
+load('results\refMap');
+load('results\refMapn');
+
+
+length = size(evaled,1);
 fr = ndgrid(1:length);
 
 hfig=figure(1);
-plot(fr,evaled(:,1),'b',fr,evaled_n(:,1),'r--',[1 351],[0 0],'c-');
+plot(fr,evaled(:,1),'b',fr,evaled_n(:,1),'r--');
 grid on;
 xlabel('frame number');
 ylabel('error')
-legend('with Full Relationship','with Neighbor Relationship','Ideal','Location','best')
+legend('with Full Relationship','with Neighbor Relationship','Location','best')
 title('Root Mean Squared Difference for Tracked Image')
 pfig = pubfig(hfig);
 pfig.LegendLoc = 'best';
@@ -43,47 +49,57 @@ expfig('results\ssdcompare','-pdf');
 
 
 hfig=figure(2);
-plot(fr,evaled(:,2),'b',fr,evaled_n(:,2),'r--',[1 351],[1 1],'c-');
+plot(fr,evaled(:,2),'b',fr,evaled_n(:,2),'r--');
 grid on;
 xlabel('frame number');
 ylabel('evaluated value')
-legend('with Full Relationship','with Neighbor Relationship','Ideal','Location','best')
+legend('with Full Relationship','with Neighbor Relationship','Location','best')
 title('Mutual Infromation for Tracked Image')
 pfig = pubfig(hfig);
 pfig.LegendLoc = 'best';
 pfig.FigDim = [15 11];
 expfig('results\micompare','-pdf');
 
-
+%%
 figure(3);
-imshow(refMap(183:662,1:618),[0 255])
+imshow(refMap_c,[0 255])
 title('Ground Truth');
+expfig('results\groundtruth','-pdf');
 
 %% Checking Final Results
-final=buff(length).i(183:662,1:618);
-finaln=buffn(length).i(183:662,1:618);
-GT = refMap(183:662,1:618);
-GTn = GT;
+final=buff(length).i;
+finaln=buffn(length).i;
+GT = refMap;
+GTn = refMapn;
 
-GT(find(~final)) = 0;
+GT(~final) = 0;
 GTn(find(~finaln)) =0;
 
 figure(4);
 imshow(abs(GT-final),[0 255]);
-
+expfig('results\fullmap_error','-pdf');
 figure(5);
+imshow(final,[0 255]);
+expfig('results\fullmap','-pdf');
+
+figure(6);
 imshow(abs(GTn-finaln),[0 255]);
+expfig('results\neimap_error','-pdf');
+figure(7);
+imshow(finaln,[0 255]);
+expfig('results\neimap','-pdf');
 
 
 %% bad region
+num = 200;
 
-figure(6);
-imshow(Update(107).i(183:662,1:618),[0 255])
+figure(8);
+imshow(Update(num).i,[0 255])
 
-figure(7);
-GT = refMap(183:662,1:618);
-GT(find(~Update(107).i(183:662,1:618))) = 0;
-imshow(abs(GT-Update(107).i(183:662,1:618)),[0 255])
+figure(9);
+GT = refMap;
+GT(find(~Update(num).i)) = 0;
+imshow(abs(GT-Update(num).i),[0 255])
 
 %%
 figure;

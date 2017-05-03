@@ -30,11 +30,11 @@ load('results\comparison');
 fr = ndgrid(1:length);
 
 hfig=figure(1);
-plot(fr,evaled(:,1),'b',fr,evaled_n(:,1),'r--',[1 351],[0 0],'c-');
+plot(fr,evaled(:,1),'b',fr,evaled_n(:,1),'r--');
 grid on;
 xlabel('frame number');
 ylabel('error')
-legend('with Full Relationship','with Neighbor Relationship','Ideal','Location','best')
+legend('with Full Relationship','with Neighbor Relationship','Location','best')
 title('Root Mean Squared Difference for Tracked Image')
 pfig = pubfig(hfig);
 pfig.LegendLoc = 'best';
@@ -43,11 +43,11 @@ expfig('results\ssdcompare','-pdf');
 
 
 hfig=figure(2);
-plot(fr,evaled(:,2),'b',fr,evaled_n(:,2),'r--',[1 351],[1 1],'c-');
+plot(fr,evaled(:,2),'b',fr,evaled_n(:,2),'r--');
 grid on;
 xlabel('frame number');
 ylabel('evaluated value')
-legend('with Full Relationship','with Neighbor Relationship','Ideal','Location','best')
+legend('with Full Relationship','with Neighbor Relationship','Location','best')
 title('Mutual Infromation for Tracked Image')
 pfig = pubfig(hfig);
 pfig.LegendLoc = 'best';

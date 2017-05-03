@@ -60,7 +60,8 @@ Amax = min(AmaxA,BmaxA);
 Bmax = min(AmaxB,BmaxB);
 
 refMap(Amin(1):Amax(1),Amin(2):Amax(2))=double(GT(Bmin(1):Bmax(1),Bmin(2):Bmax(2)));
-
+refMap_c = refMap(Amin(1):Amax(1),Amin(2):Amax(2)); %cropped one
+save('results\refMap','refMap','refMap_c');
 %% Make Data
 bwid = size(Map,2);
 bhei = size(Map,1);
