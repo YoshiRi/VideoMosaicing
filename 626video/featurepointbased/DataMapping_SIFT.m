@@ -1,1 +1,3 @@
-% addpath('C:\Users\yoshi\Documents\MATLAB\SIFT');
+ addpath('C:\Users\yoshi\Documents\MATLAB\SIFT');
+ 
+ 
