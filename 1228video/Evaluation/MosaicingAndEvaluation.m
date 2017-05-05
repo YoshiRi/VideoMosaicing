@@ -46,7 +46,24 @@ refMap = Map;
 %% Make GrandTruth
 %Ç±Ç±Ç…ÇÕêTèdÇ»åvéZÇ™ïKóv
 
-refMap(183:662,1:618) = double(GT(1:480,247:864)); 
+% refMap(183:662,1:618) = double(GT(1:480,247:864)); 
+crop = FindMinMax( T_val(1,:) ,width,height,xmin,ymin);
+Abase = [crop(2),crop(1)]; % (Ay,Ax)
+Bbase = [vidHeight-height,vidWidth-width]/2;
+AminA = [1 1]; AmaxA = size(Map);
+BminB = [1 1]; BmaxB = [vidHeight,vidWidth];
+AminB = AminA+Bbase-Abase;AmaxB = AmaxA+Bbase-Abase;
+BminA = BminB+Abase-Bbase;BmaxA = BmaxB+Abase-Bbase;
+%minìØémÇÕmaxÇÇ∆ÇÈ vise versa
+Amin = max(AminA,BminA);
+Bmin = max(AminB,BminB);
+Amax = min(AmaxA,BmaxA);
+Bmax = min(AmaxB,BmaxB);
+
+refMap(Amin(1):Amax(1),Amin(2):Amax(2))=double(GT(Bmin(1):Bmax(1),Bmin(2):Bmax(2)));
+refMap_c = refMap(Amin(1):Amax(1),Amin(2):Amax(2)); %cropped one
+save('results\refMap','refMap','refMap_c');
+
 
 %% Make 
 bwid = size(Map,2);
@@ -88,7 +105,7 @@ v = VideoWriter('results\MappingFull.avi');
 v.FrameRate = 8; % Framerate
 open(v);
 for k = 1:length
-    writeVideo(v,uint8(buff.i(k)));
+    writeVideo(v,uint8(buff(k).i));
 end
 
 close(v);

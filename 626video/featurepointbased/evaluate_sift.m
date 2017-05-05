@@ -19,3 +19,10 @@ BI = AI;
 
 %%
 RIPOC_func(AI,BI)
+
+%%
+[~,des1,loc1] = sift_ri(AI);
+[~,des2,loc2] = sift_ri(BI);
+
+[Xi ,Err] = SIFT2POCparam(des1,loc1,des2,loc2,cx,cy);
+

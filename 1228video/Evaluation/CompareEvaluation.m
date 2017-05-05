@@ -54,7 +54,7 @@ pfig.LegendLoc = 'best';
 pfig.FigDim = [15 11];
 expfig('results\micompare','-pdf');
 
-
+%%
 figure(3);
 imshow(refMap(183:662,1:618),[0 255])
 title('Ground Truth');

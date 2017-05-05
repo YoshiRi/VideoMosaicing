@@ -28,8 +28,8 @@ feature = struct('des',[],'loc',[]);
 while hasFrame(vidObj)
    s(k).cdata = rgb2gray( imcrop(readFrame(vidObj),[ cx - Wid/2, cy - Hei/2,Wid-1,Hei-1]) );
     [~,des,loc] = sift_ri(s(k).cdata);
-    feature(k).des = des;
-    feature(k).loc = loc;
+     feature(k).des = des;
+     feature(k).loc = loc;
    k = k+1;
 end
 Numframes = k - 1;
@@ -41,12 +41,11 @@ save('VideoImages','s','Numframes','Wid','Hei');
 load('featurepoints');
 load('VideoImages');
 
-Numframes = k - 1;
+%Numframes = k - 1;
 % initialize
 time = zeros(Numframes,1);
 
 valMap = zeros(Numframes,Numframes,4); % buff
-val_ref = zeros(Numframes,4,1); % real
 peakMap = zeros(Numframes,Numframes,2);
 Err=[0 0];
 
@@ -74,4 +73,5 @@ for i = 1 : Numframes-1
         end
     end
 end
-save(strcat(filename,'FullMap.mat'));
+%%
+save(strcat(filename,'FullMap_SIFT.mat'));

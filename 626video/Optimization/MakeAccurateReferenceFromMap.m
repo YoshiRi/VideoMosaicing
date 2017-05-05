@@ -210,4 +210,4 @@ ylabel('sum of weight')
 legend('Sum of Weights')
 
 %% save the result
-save('Optimized_626','T_val','nT_val');
+save('Optimized_626','T_val','nT_val','time');
