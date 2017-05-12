@@ -90,12 +90,15 @@ figure(5);
 imshow(final,[0 255]);
 % expfig('results\fullmap','-pdf');
 
+
 figure(6);
 imshow(abs(GTn-finaln),[0 255]);
 expfig('results\neimap_sift_error','-pdf');
 figure(7);
 imshow(finaln,[0 255]);
 expfig('results\neimap_sift','-pdf');
+imshow(finaln(Amin(1):Amax(1),Amin(2):Amax(2)),[0 255]);
+expfig('results\neimapc_sift','-pdf');
 
 
 %% bad region

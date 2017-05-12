@@ -1,33 +1,20 @@
 %% get accurate reference from map
-close all
-clear all
-
 
 % Get whole map
-% load('../ExtractData/1228FullMap_SIFT');
-load('../ExtractData/1228FullMap_SIFT_r'); % reviced for error value
-refnumMap = peakMap;
-valMap(:,:,4) = -valMap(:,:,4)/pi*180;
+load('../extractData/1228FullMapr.mat');
 
 FigSize = [15 11];
 smallFigSize = [12 8];
 %% Get value Map
-pmat = refnumMap(:,:,1); % get map 
-% maxerr = 0.01;
-maxerr = 2.5;
-minerr = 0;
-pmat(find(pmat>maxerr))=0;
-Bpmat = im2bw(pmat,minerr);                        % Get binarized pmat
-Spmat = 1-pmat/0.03;                                       % Get sparse peakmat
-Spmat(find(Spmat==Inf))=0;
+pmat = refnumMap(:,:,2); % get map 
+minpeak = 0.075;
+Bpmat = im2bw(pmat,minpeak);                        % Get binarized pmat
+Spmat = Bpmat.*pmat;                                       % Get sparse peakmat
 
 figure(1);
 imshow(Bpmat);
-ylabel('Reference Image Number');
-xlabel('Compared Image Number');
 
 %% kuso syuusei
-n = size(time,1);
 time(n) = time(n-1)*2 - time(n-1);
  
  %% 1. solve theta equation
@@ -63,9 +50,9 @@ grid on;
 legend('with Full Relation','with Neighbor Relation','Location','Best')
 pfig = pubfig(hfig);
 pfig.FigDim = FigSize;
-expfig('results\thetaCompared_sift','-pdf');
+expfig('results\thetaCompared','-pdf');
 pfig.FigDim =  smallFigSize;
-expfig('results\thetaCompareds_sift','-pdf');
+expfig('results\thetaCompareds','-pdf');
 
 
 sT_val(2:n,4) = solve_Mapping(rCtaMap,Spmat);
@@ -88,6 +75,8 @@ legend('with Map Information','with Neighbor Information','with weighted Map Inf
 KMap = valMap(:,:,3);                                        % get kappa map
 lKMap = log(KMap);                                            % make log scale map
 lKMap(~isfinite(lKMap))=0;
+
+rlKMap = lKMap.*BMap;                                      % make log scale map
 
 lnkappa = solve_Mapping(lKMap,Bpmat);          % solve linear equation
 slnkappa = solve_Mapping(lKMap,Spmat);          % solve linear equation
@@ -117,9 +106,9 @@ grid on;
 legend('with Full Relation','with Neighbor Relation','Location','Best')
 pfig = pubfig(hfig);
 pfig.FigDim =  FigSize;
-expfig('results\scalingCompared_sift','-pdf');
+expfig('results\scalingCompared','-pdf');
 pfig.FigDim =  smallFigSize;
-expfig('results\scalingCompareds_sift','-pdf');
+expfig('results\scalingCompareds','-pdf');
 
 
 figure(9);
@@ -165,9 +154,9 @@ grid on;
 legend('with Full Relation','with Neighbor Relation','Location','Best')
 pfig = pubfig(hfig);
 pfig.FigDim =  FigSize;
-expfig('results\yCompared_sift','-pdf');
+expfig('results\yCompared','-pdf');
 pfig.FigDim =  smallFigSize;
-expfig('results\yCompareds_sift','-pdf');
+expfig('results\yCompareds','-pdf');
 
 
 hfig=figure(11);
@@ -178,9 +167,9 @@ grid on;
 legend('with Full Relation','with Neighbor Relation','Location','Best')
 pfig = pubfig(hfig);
 pfig.FigDim =  FigSize;
-expfig('results\xCompared_sift','-pdf');
+expfig('results\xCompared','-pdf');
 pfig.FigDim =  smallFigSize;
-expfig('results\xCompareds_sift','-pdf');
+expfig('results\xCompareds','-pdf');
 
 
 figure(15);
@@ -208,15 +197,11 @@ legend('with Map Information','with Neighbor Information','with weighted Map Inf
 %% show
 hv = diag(H);
 figure(14);
-plot(2:n,hv);
+plot(2:351,hv);
 grid on;
 xlabel('frame number')
 ylabel('sum of weight')
 legend('Sum of Weights')
 
 %% save the result
-T_val_sift = T_val;
-nT_val_sift = nT_val;
-time_sift = time;
-
-save('Optimized_1228_sift','T_val_sift','nT_val_sift','time_sift');
+save('Optimized_1228','T_val','nT_val');

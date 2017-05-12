@@ -20,9 +20,21 @@ BI = AI;
 %%
 RIPOC_func(AI,BI)
 
-%%
+%% from matches
 [~,des1,loc1] = sift_ri(AI);
 [~,des2,loc2] = sift_ri(BI);
 
 [Xi ,Err] = SIFT2POCparam(des1,loc1,des2,loc2,cx,cy);
 
+%% use cv_tools
+addpath('C:\Users\yoshi\Documents\MATLAB\rvctools_cv');
+startup_rvc;
+%% added for sift
+%     run('C:\Users\yoshi\Documents\MATLAB\vlfeat-0.9.20\toolbox\vl_setup')
+addpath('C:\Users\yoshi\Documents\MATLAB\vlfeat-0.9.20\toolbox\noprefix');
+% for surf use
+addpath('C:\Users\yoshi\Documents\MATLAB\OpenSURF_version1c');
+%%
+asf = isurf(AI);
+bsf = isurf(BI);
+mt = FeatureMatch(asf,bsf,10)

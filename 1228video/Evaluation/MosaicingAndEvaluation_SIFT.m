@@ -60,8 +60,8 @@ Bmax = min(AmaxB,BmaxB);
 
 refMap(Amin(1):Amax(1),Amin(2):Amax(2))=double(GT(Bmin(1):Bmax(1),Bmin(2):Bmax(2)));
 refMap_c = refMap(Amin(1):Amax(1),Amin(2):Amax(2)); %cropped one
-save('results\refMap_sift','refMap','refMap_c');
-
+%%
+save('results\refMap_sift','refMap','refMap_c','Amin','Amax');
 
 %% Make 
 bwid = size(Map,2);

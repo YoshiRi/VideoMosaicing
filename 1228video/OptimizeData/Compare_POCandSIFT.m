@@ -17,9 +17,10 @@ grid on;
 legend('with POC','with SIFT','Location','Best')
 pfig = pubfig(hfig);
 pfig.FigDim = FigSize;
-% expfig('results\thetaCompared_POCsift','-pdf');
-% pfig.FigDim =  smallFigSize;
-% % expfig('results\thetaCompareds_POCsift','-pdf');
+ expfig('results\thetaCompared_POCsift','-pdf');
+ pfig.FigDim =  smallFigSize;
+pfig.LegendLoc = 'northeast';
+ expfig('results\thetaCompareds_POCsift','-pdf');
 
 hfig=figure(2);
 plot(time,T_val(:,3),'b',time_sift,nT_val_sift(:,3),'r--');
@@ -29,9 +30,9 @@ grid on;
 legend('with POC','with SIFT','Location','Best')
 pfig = pubfig(hfig);
 pfig.FigDim = FigSize;
-% expfig('results\thetaCompared_POCsift','-pdf');
-% pfig.FigDim =  smallFigSize;
-% % expfig('results\thetaCompareds_POCsift','-pdf');
+ expfig('results\scalingCompared_POCsift','-pdf');
+ pfig.FigDim =  smallFigSize;
+ expfig('results\scalingCompareds_POCsift','-pdf');
 
 hfig=figure(3);
 plot(time,T_val(:,2),'b',time_sift,nT_val_sift(:,2),'r--');
@@ -41,6 +42,11 @@ grid on;
 legend('with POC','with SIFT','Location','Best')
 pfig = pubfig(hfig);
 pfig.FigDim = FigSize;
+ expfig('results\yCompared_POCsift','-pdf');
+ pfig.FigDim =  smallFigSize;
+pfig.LegendLoc = 'best';
+ expfig('results\yCompareds_POCsift','-pdf');
+
 
 hfig=figure(4);
 plot(time,T_val(:,4),'b',time_sift,nT_val_sift(:,4),'r--');
@@ -50,4 +56,8 @@ grid on;
 legend('with POC','with SIFT','Location','Best')
 pfig = pubfig(hfig);
 pfig.FigDim = FigSize;
+ expfig('results\xCompared_POCsift','-pdf');
+ pfig.FigDim =  smallFigSize;
+pfig.LegendLoc = 'northeast';
+ expfig('results\xCompareds_POCsift','-pdf');
 

@@ -2,7 +2,7 @@
 load('featurepoints');
 load('VideoImages');
 
-addpath('..\SIFT\');
+addpath('C:\Users\yoshi\Documents\MATLAB\SIFT\');
 
 % initialize
 time = zeros(Numframes,1);
@@ -16,6 +16,9 @@ RefFramenum = 1;
 RF = s(1).cdata;
 RFnum = 1;
 
+vidObj.FrameRate = 15;
+cx = 128;
+cy = 128;
 
 for i = 1 : Numframes-1
         % hoge
@@ -36,4 +39,4 @@ for i = 1 : Numframes-1
     end
 end
 %%
-save(strcat('1228FullMap_SIFT.mat'));
+save(strcat('1228FullMap_SIFTr.mat'));
