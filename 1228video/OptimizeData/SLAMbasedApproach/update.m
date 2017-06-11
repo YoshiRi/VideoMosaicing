@@ -1,9 +1,9 @@
 function [Xest_n,P_n]=update(Xest,P,Map,Landmark,frame)
 
 % observe Noise
-Qbase = diag([0.04 0.04 0.04 0.000001]);
+Qbase = diag([0.01 0.01 0.1 0.001].^2);
 
-[Y, List, covs]= observation(Xest,Map,Landmark,frame);
+[Y ,List, covs, Lands]= observation(Xest,Map,Landmark,frame);
 
 Xest_old = Xest;
 
@@ -11,15 +11,17 @@ for i = 1:length(List)
     Num = List(i);% nanbanme
     Q = Qbase .* covs(i); % Observation covariance
 
-    % Measured Landmark
-    Land = Y(i,:)';
+    % Measured res and Landmark    
+    y = Y(i,:)';
+    Land = Lands(i,:)';
     % Estimated Landmark
-    Land_ = Xest_old(4*Num+1:4*Num+4,1); % estimated from state
+    yhat = estimate_observation(Xest(1:4),Xest_old(4*Num+1:4*Num+4,1)); % estimated from state
 
     % If it is newly observed points, Initilize it
     if Xest(4*Num+1:4*Num+4,1) == [0 0 0 0]'
         Xest(4*Num+1:4*Num+4,1) = Land;
-        Land_ = Land;
+        display(Land);
+        Num
     end
     
     % make transform matrix F
@@ -30,10 +32,10 @@ for i = 1:length(List)
     % make jacob matrix
     H = makejacob(Xest,Num) * F;
     % Kalman Gain
-    display(H*P*H'+Q);
+%     display(H*P*H'+Q);
     K = P*H'/(H*P*H'+Q);
     % update robot state
-    Xest = Xest + K*(Land - Land_);
+    Xest = Xest + K*(y-yhat);
     % update covariance matrix
     P = (eye(size(P)) - K*H)*P;
 end
@@ -55,22 +57,24 @@ dx = dX(1); dy = dX(2);
 Px = sn*dx + cs*dy;
 Py = cs*dx - sn*dy;
 
-Hr = [-cs sn -Px Py;
-          -sn -cs Py Px;
+Hr = [-cs sn Px -Py;
+          -sn -cs -Py -Px;
           0 0 -1 0;
           0 0 0 -1];
 Hl = [cs -sn 0 0;
           sn cs 0 0;
           0 0 1 0;
           0 0 0 1];
+      
 H = [Hr,Hl];
 end
 
-function [Y,List,covs]=observation(Xest,Map,Ln,frame)
+function [Y,List,covs,Land]=observation(Xest,Map,Ln,frame)
 % initialize 
 List = [];
 covs = [];
 Y = [];
+Land = [];
 
 len = length(Ln);
 for i =1:len
@@ -87,11 +91,11 @@ for i =1:len
     end
     
     % if has relation add pole
-    if peak > 0
+    if peak > 0.1
         covs = [covs; peak2covs(peak)];
         List = [List; i];
-        Land = estimate_landpose(Xest,val); % estimate land pose
-        Y =[Y;Land'];
+        Land = [Land;estimate_landpose(Xest,val)']; % estimate land pose
+        Y =[Y;val'];
     end
         
 end
@@ -105,12 +109,15 @@ function covs  = peak2covs(peak)
 % consider only two types
 
 if peak == 1
-    covs = 0.00; % almost true
-elseif peak > 0.2 
-    covs = 1;
-else
-    covs = 4;
+    covs = 0.01; % almost true
+elseif peak > 0.5 
+    covs = 2;
+elseif peak > 0.2
+    covs = 8;
+else 
+    covs = 1000;
 end
+
 end
 
 function [Land]=estimate_landpose(Xest,dX)
@@ -126,4 +133,19 @@ Ainv = [cs/k sn/k 0 0 ;
              0 0 0 1];
 
 Land = X + Ainv*dX;
+end
+
+function [dX]=estimate_observation(Xest,Land)
+% robot pose
+X = Xest(1:4);
+k = exp(X(4));
+cs = k*cosd(X(3));
+sn = k*sind(X(3));
+
+A = [cs -sn 0 0 ;
+         sn cs 0 0;
+          0 0 1 0;
+          0 0 0 1];
+
+dX= A*( Land - X );
 end

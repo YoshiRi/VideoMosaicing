@@ -46,12 +46,7 @@ Ju = [cn*invs sn*invs 0 0;
           0 0 1 0;
           0 0 0 1];
 
-Gt = eye(len)+Fx*Jr*Fx';
-
 % update
-% P_n = Gt*P*Gt' + Ju*N*Ju';
-
-
   P_n(1:4,1:4) = Jr*Prr*Jr' + Ju*N*Ju';
   P_n(1:4,5:end) = Jr*Prm;
   P_n(5:end,1:4) = P_n(1:4,5:end)';
@@ -61,7 +56,7 @@ function covs  = peak2covs(peak)
 % consider only two types
 
 if peak == 1
-    covs = 0; % almost true
+    covs = 0.01; % almost true
 elseif peak > 0.2 
     covs = 1;
 else
