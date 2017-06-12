@@ -60,7 +60,9 @@ for frame = 1:len
     plot(Xest(1),Xest(2),'r*'); hold on 
     for i = 1:Lnum
         plot(Xest(1+4*i),Xest(2+4*i),'pg','MarkerSize',10); hold on;
-        ShowErrorEllipse(Xest(1+4*i:2+4*i),P(1+4*i:2+4*i,1+4*i:2+4*i),'g');hold on;
+        if [Xest(1+4*i),Xest(2+4*i)] ~= [0,0]
+            ShowErrorEllipse(Xest(1+4*i:2+4*i),P(1+4*i:2+4*i,1+4*i:2+4*i),'g');hold on;
+        end
     end
     ShowErrorEllipse(Xest(1:2),P,'r');hold on;
     plot(result.X(1:frame,1),result.X(1:frame,2),'k--');

@@ -20,8 +20,9 @@ for i = 1:length(List)
     % If it is newly observed points, Initilize it
     if Xest(4*Num+1:4*Num+4,1) == [0 0 0 0]'
         Xest(4*Num+1:4*Num+4,1) = Land;
+        yhat = y;
         display(Land);
-        Num
+        display(Num);
     end
     
     % make transform matrix F
@@ -41,6 +42,7 @@ for i = 1:length(List)
 end
 
 Xest_n = Xest;
+% Xest_n(4) = Xest_old(4);
 P_n = P;
 end
 
