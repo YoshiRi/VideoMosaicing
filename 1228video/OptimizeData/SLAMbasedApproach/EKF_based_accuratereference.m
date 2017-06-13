@@ -42,18 +42,21 @@ Xest = sparse(zeros(4*(1+Lnum),1));
 P(5:end,5:end) = 1000*eye(4*Lnum);
 
 % state noise
-N = diag([0.02 0.02 0.05 0.001].^2);
+N = diag([0.01 0.01 0.05 0.001].^2);
 
 %% start EKFSLAM
 
 result.X = zeros(len,size(Xest,1));
 result.P = zeros(size(P,1),size(P,2),len);
+result.List = zeros(len,Lnum);
 
 for frame = 1:len
+    List = [];
     [Xest,P]=odmetry(Xest,Map,frame,P,N);
-    [Xest,P]=update(Xest,P,Map,Ln,frame);
+    [Xest,P,List]=update(Xest,P,Map,Ln,frame);
     result.X(frame,:) = Xest';
     result.P(:,:,frame) = P;
+    result.List(frame,List) = 1;
     % animation
     hold off;    
     hfig=figure(10);
@@ -70,7 +73,9 @@ for frame = 1:len
     ylim([-400 400]);
     grid on;
     drawnow;
-    pause(0.01);
+    if mod(frame,10) == 0
+        waitforbuttonpress;
+    end
 end
 
 %% show result debug
@@ -87,3 +92,6 @@ plot(1:size(result.X,1),result.X(:,3),'r',1:size(Truth,1),Truth(:,3),'b--');
 figure(3);
 plot(1:size(result.X,1),result.X(:,4),'r',1:size(Truth,1),Truth(:,4),'b--');
 
+figure(4);
+plot(1:size(result.List,1),result.List(:,:));
+legend('1','2','3','4');

@@ -18,7 +18,7 @@ xlabel('Compared Image Number');
 time(n) = time(n-1)*2 - time(n-1);
  
 %%
-WSize = 7;
+WSize = 5;
  %% 1. solve theta equation
  T_val = zeros(size(valMap,1),4);                         % put the true value
  nT_val = zeros(size(valMap,1),4);                         % put the unchi value

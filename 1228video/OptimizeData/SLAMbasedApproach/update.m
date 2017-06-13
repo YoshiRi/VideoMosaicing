@@ -1,7 +1,7 @@
-function [Xest_n,P_n]=update(Xest,P,Map,Landmark,frame)
+function [Xest_n,P_n,List]=update(Xest,P,Map,Landmark,frame)
 
 % observe Noise
-Qbase = diag([0.01 0.01 0.1 0.001].^2);
+Qbase = diag([0.01 0.01 0.05 0.001].^2);
 
 [Y ,List, covs, Lands]= observation(Xest,Map,Landmark,frame);
 
@@ -39,6 +39,8 @@ for i = 1:length(List)
     Xest = Xest + K*(y-yhat);
     % update covariance matrix
     P = (eye(size(P)) - K*H)*P;
+        display(frame);
+        display(y-yhat);
 end
 
 Xest_n = Xest;
