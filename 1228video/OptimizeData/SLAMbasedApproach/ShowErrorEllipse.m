@@ -15,8 +15,8 @@ chi=9.21;%Œë·‘È‰~‚ÌƒJƒC‚Ì“ñæ•ª•z’l@99%
 
 %‘È‰~•`Ê
 t=0:10:360;
-a=sqrt(eigval(bigind,bigind)*chi);
-b=sqrt(eigval(smallind,smallind)*chi);
+a=real(sqrt(eigval(bigind,bigind)*chi));
+b=real(sqrt(eigval(smallind,smallind)*chi));
 x=[a*cosd(t);
    b*sind(t)];
 %Œë·‘È‰~‚ÌŠp“x‚ğŒvZ

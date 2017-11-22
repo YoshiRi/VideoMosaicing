@@ -1,20 +1,21 @@
-function Map = makeTestdata()
+function [Map,GroundTruth] = makeTestdata()
 
-datalength = 350;
+datalength = 5;
 
-GrandTruth = zeros(datalength,4);
+GroundTruth = zeros(datalength,4);
 
-GrandTruth(:,1) = 0.6 * ndgrid(1:datalength,1);
-GrandTruth(:,2) = - 0.2 *ndgrid(1:datalength,1);
-GrandTruth(:,4) =  log(1 + (50 - ndgrid(1:datalength,1))/500) ;
-GrandTruth(:,3) =  20 * sind( ndgrid(1:datalength,1)) ;
+GroundTruth(:,1) = 0.6 * ndgrid(1:datalength,1);
+GroundTruth(:,2) = - 0.2 *ndgrid(1:datalength,1);
+GroundTruth(:,4) =  log(1 + (50 - ndgrid(1:datalength,1))/500) ;
+GroundTruth(:,3) =  20 * sind( ndgrid(1:datalength,1)) ;
 
-Noise = cat(3, 0.01 * randn(datalength,datalength,2), 0.02 * randn(datalength,datalength,1), 0.001 * randn(datalength,datalength,1));
-Peaks = 0.6*ones(datalength,datalength);
-scale = ndgrid(2:datalength,1);
+Ns = datalength + 1;
+Noise = cat(3, 0.01 * randn(Ns,Ns,2), 0.02 * randn(Ns,Ns,1), 0.001 * randn(Ns,Ns,1));
+Peaks = 0.6*ones(Ns,Ns);
 %% ÉfÅ[É^seisei
 rawMap = remakemap(GroundTruth);
-Map = cat(3,rawMap+Noise(:,:,4),Peaks);
+
+Map = cat(3,rawMap,Peaks);
 
 end
 
@@ -29,14 +30,19 @@ Map(1,2:n,3) = v(:,3);
 
 for i = 2:n-1
     for j = i+1:n
-        Map(i,j,3) =  Map(1,j,3) - Map(1,i.3);
-        Map(i,j,4) =  Map(1,j,4) - Map(1,i.4);
+        Map(i,j,3) =  Map(1,j,3) - Map(1,i,3);
+        Map(i,j,4) =  Map(1,j,4) - Map(1,i,4);
     end
 end
 
 for i = 2:n-1
     for j = i+1:n
-        Map(i,j) =  Map(1,j) - Map(1,i);
+        dx = [Map(1,j,1) - Map(1,i,1)];
+        dy = [Map(1,j,2) - Map(1,i,2)];
+        cs = cosd(Map(i,j,3))*exp(Map(i,j,4));
+        sn = sind(Map(i,j,3))*exp(Map(i,j,4));
+        Map(i,j,1) = cs*dx-sn*dy;
+        Map(i,j,2) = sn*dy +cs*dx;
     end
 end
 

@@ -25,7 +25,7 @@
 % % kuso syuusei
 % time(n) = time(n-1)*2 - time(n-1);
 
-Map = makeTestdata();
+[Map,Truth] = makeTestdata();
 %% for Initialization
 
 % define length
@@ -52,10 +52,11 @@ result.X = zeros(len,size(Xest,1));
 result.P = zeros(size(P,1),size(P,2),len);
 result.List = zeros(len,Lnum);
 
+Xest(1:4)=Truth(1,:)';
 for frame = 1:len
     List = [];
     [Xest,P]=odmetry(Xest,Map,frame,P,N);
-    [Xest,P,List]=update(Xest,P,Map,Ln,frame);
+%     [Xest,P,List]=update(Xest,P,Map,Ln,frame);
     result.X(frame,:) = Xest';
     result.P(:,:,frame) = P;
     result.List(frame,List) = 1;
@@ -69,7 +70,7 @@ for frame = 1:len
             ShowErrorEllipse(Xest(1+4*i:2+4*i),P(1+4*i:2+4*i,1+4*i:2+4*i),'g');hold on;
         end
     end
-    ShowErrorEllipse(Xest(1:2),P,'r');hold on;
+%    ShowErrorEllipse(Xest(1:2),P,'r');hold on;
     plot(result.X(1:frame,1),result.X(1:frame,2),'k--');
     xlim([-400 400]);
     ylim([-400 400]);
@@ -81,7 +82,6 @@ for frame = 1:len
 end
 
 %% show result debug
-load('Truth');
 figure(1);
 plot(1:size(result.X,1),result.X(:,1),'r',1:size(Truth,1),Truth(:,1),'b--'); hold on 
 plot(1:size(result.X,1),result.X(:,2),'m',1:size(Truth,1),Truth(:,2),'c--'); hold off
@@ -89,10 +89,12 @@ plot(1:size(result.X,1),result.X(:,2),'m',1:size(Truth,1),Truth(:,2),'c--'); hol
 
 figure(2);
 plot(1:size(result.X,1),result.X(:,3),'r',1:size(Truth,1),Truth(:,3),'b--');
+legend('Result','Truth')
 
 
 figure(3);
 plot(1:size(result.X,1),result.X(:,4),'r',1:size(Truth,1),Truth(:,4),'b--');
+legend('Result','Truth')
 
 figure(4);
 plot(1:size(result.List,1),result.List(:,:));
